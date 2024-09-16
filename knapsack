@@ -1,0 +1,69 @@
+#include <stdio.h>
+
+int main() {
+    int n, i, j;
+    float totalWeight, totalValue = 0.0, capacity;
+
+    // Input number of items
+    printf("Enter the number of items: ");
+    scanf("%d", &n);
+
+    // Arrays to store weights, values, and value/weight ratios
+    float weights[n], values[n], ratio[n];
+
+    // Input capacity of the knapsack
+    printf("Enter the capacity of the knapsack: ");
+    scanf("%f", &capacity);
+
+    // Input values and weights for each item
+    printf("Enter the weights and values of the items:\n");
+    for (i = 0; i < n; i++) {
+        printf("Item %d - Weight: ", i + 1);
+        scanf("%f", &weights[i]);
+        printf("Item %d - Value: ", i + 1);
+        scanf("%f", &values[i]);
+
+        // Calculate value/weight ratio for each item
+        ratio[i] = values[i] / weights[i];
+    }
+
+    // Sort items by value/weight ratio in descending order (simple bubble sort)
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
+            if (ratio[j] < ratio[j + 1]) {
+                // Swap value/weight ratios
+                float temp = ratio[j];
+                ratio[j] = ratio[j + 1];
+                ratio[j + 1] = temp;
+
+                // Swap weights
+                temp = weights[j];
+                weights[j] = weights[j + 1];
+                weights[j + 1] = temp;
+
+                // Swap values
+                temp = values[j];
+                values[j] = values[j + 1];
+                values[j + 1] = temp;
+            }
+        }
+    }
+
+    // Apply the greedy approach to fill the knapsack
+    for (i = 0; i < n; i++) {
+        if (capacity > 0 && weights[i] <= capacity) {
+            // Take the whole item
+            capacity -= weights[i];
+            totalValue += values[i];
+        } else {
+            // Take a fraction of the remaining capacity
+            totalValue += values[i] * (capacity / weights[i]);
+            break;
+        }
+    }
+
+    // Output the maximum total value
+    printf("Maximum value in knapsack = %.2f\n", totalValue);
+
+    return 0;
+}
